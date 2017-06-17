@@ -1,0 +1,340 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Ronin</title>
+  <style>
+    canvas{border:1px solid black;}
+  </style>
+  <script src = "keys.js"></script>
+  <script src = "fpsmetre.js"></script>
+  <script src = "levelv02.js"></script>
+</head>
+<body onload = "startGame()">
+  <h2>Welcome to Ronin!!</h2>
+  <script>
+
+
+    /*
+    #===============================================#
+    #     The game area!                            #
+    #-----------------------------------------------#
+    #                                               #
+    # Creates a canvas and inserts it onto the page #
+    #                                               #
+    # The clear function refreshes the game area    #
+    #                                               #
+    #===============================================#
+    */
+
+    var myGameArea = {
+      canvas : document.createElement('canvas'),
+      start : function() {
+        this.tileW = 64;
+        this.tileH = 64;
+        this.canvas.width = 1280;
+        this.canvas.height = 720;
+        this.context = this.canvas.getContext('2d');
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+
+      },
+      clear : function(){
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      }
+    }
+
+    function camera(x,y){
+          this.x=x,
+          this.y=y,
+          this.width=1280,
+          this.height=720,
+          this.update = function(dt,focus){
+            if(focus.x>this.width/2&&focus.x<myMap.map.length*myMap.tileH-this.width/2){
+              this.x=focus.x-this.width/2;
+              }
+            if(focus.y<myMap.map[0].length*myMap.tileH){
+              this.y=focus.y-this.height/3;
+              }
+
+            }
+          this.render = function(arr){
+              for(i=0;i<arr.length;i++){
+                var item=arr[i];
+                if(checkCollision(this,item)){
+                      var ctx = myGameArea.context;
+                      img = item.img;
+                      sx = item.imgSrcX;
+                      sy = item.imgSrcY;
+                      sw = item.imgWidth;
+                      sh = item.imgHeight;
+                      dx = item.imgX-this.x;
+                      dy = item.imgY-this.y;
+                      dw = item.imgWidth;
+                      dh = item.imgHeight;
+                      ctx.drawImage(img,sx,sy,sw,sh,dx,dy,dw,dh);
+                      //ctx.fillStyle = item.col;
+                      //ctx.fillRect(item.x-this.x, item.y-this.y, item.width, item.height);
+                      // if(item.img){ctx.drawImage(img,sx,sy,sw,sh,dx,dy,dw,dh);}
+                      // else{console.log('no img');}
+              }
+            }
+          }
+        }
+
+    /*
+    #=====================#
+    #  Ready the game     #
+    #=====================#
+    */
+
+    function timeStamp(){
+      return window.performance && window.performance.now ? window.performance.now() : new Date().getTime();
+    }
+
+    function startGame(){
+          fpsmeter = new FPSMeter({ decimals: 0, graph: true, theme: 'dark', left: '5px' });
+          tiles = new Image();
+          tiles.src = 'tiles.png'
+          cat = new Image();
+          cat.src = 'samurai.png';
+          myGameArea.start();
+          camera = new camera(0,0);
+          addEvents();
+          keyController = new keyInputController();
+          myGamePiece = new component(64,128,"red",0,390,'player',cat);
+          collisionObjects = [];
+          myMap = new level(1);
+          myMap.populateMap();
+          now = timeStamp();
+          dt = timeStamp();
+          last = timeStamp();
+          requestAnimationFrame(gameLoop);
+
+        }
+
+    /*
+    #============================#
+    #  add event listeners to    #
+    #============================#
+    */
+
+    function addEvents(){
+      document.addEventListener('keydown', function(ev){
+        return keyController.keyHandler(ev, ev.keyCode, true); }, false);
+      document.addEventListener('keyup', function(ev){
+        return keyController.keyHandler(ev, ev.keyCode, false); }, false);
+
+    }
+
+
+    function checkKeys(dt){
+
+
+        if(keyController.keyDown.D){
+          myGamePiece.velocityX+=myGamePiece.acceleration;
+        }
+        if(keyController.keyDown.A){
+          myGamePiece.velocityX-=myGamePiece.acceleration;
+        }
+
+        if(keyController.keyDown.SPACE){
+          myGamePiece.jump(dt);
+        }else{
+          myGamePiece.canJump=true;
+        }
+
+      }
+    /*
+    #=======================#
+    #  Game update          #
+    #-----------------------#
+    #                       #
+    # Main game loop stuff  #
+    #                       #
+    #=======================#
+    */
+
+    function gameLoop(){
+          fpsmeter.tickStart();
+          now = timeStamp();
+          dt = Math.min(1,(now - last) / 1000);
+          myGameArea.clear();
+          var renderList=[];
+          checkKeys(dt);
+          myGamePiece.update(dt);
+
+          //renderList.push(myGamePiece.bbu,myGamePiece.bbd,myGamePiece.bbl,myGamePiece.bbr);
+          camera.update(dt,myGamePiece);
+          for(i=0;i<collisionObjects.length;i++){
+                renderList.push(collisionObjects[i])
+              }
+          renderList.push(myGamePiece);
+          camera.render(renderList);
+          fpsmeter.tick();
+          requestAnimationFrame(gameLoop);
+
+        }
+
+
+    function tile(x,y,w,h,solid,platform,img,sx,sy){
+
+          this.x = x;
+          this.y = y;
+          this.imgX=x;
+          this.imgY=y;
+          this.imgWidth = 64;
+          this.imgHeight = 64;
+          this.col='green';
+          this.img = img;
+          this.imgSrcX = sx;
+          this.imgSrcY = sy;
+          this.width = w;
+          this.height = h;
+          this.solid = solid;
+          this.platform = platform;
+
+            }
+
+
+    function component(width, height, color, x, y, name,img){
+          this.name = name;
+          this.col = color;
+          this.img = img;
+          this.width = width;
+          this.height = height;
+          this.x = x;
+          this.y = y;
+          this.imgX = this.x-this.width/4;
+          this.imgY = this.y;
+          this.imgSrcX = 0;
+          this.imgSrcY = 0;
+          this.imgWidth = width*2;
+          this.imgHeight = height;
+          this.canJump = true;
+          this.velocityX = 0;
+          this.velocityY = 0;
+          this.maxSpeed = 5;
+          this.gravity = 0.3;
+          this.friction = 0.8;
+          this.acceleration = 1.5;
+          this.bbu = {col:'yellow',x:this.x,y:this.y,width:this.width,height:this.height/2}
+          this.bbd = {col:'blue',x:this.x,y:this.y+(this.height/2),width:this.width, height:this.height/2}
+          this.bbl = {col:'orange',x:this.x-3,y:this.y+10,width:this.width/2-3,height:this.height-20 }
+          this.bbr = {col:'brown',x:this.x+(this.width/2),y:this.y+10,width:this.width/2+3,height:this.height-20}
+          this.canMoveUp = false;
+          this.canMoveDown = false;
+          this.canMoveRight = false;
+          this.canMoveLeft = false;
+          this.action = 'default';
+          this.jump = function(dt){
+            for(i=0;i<collisionObjects.length;i++){
+              if(checkCollision(this,collisionObjects[i])&&this.canJump){
+                this.velocityY=-7;
+                this.canJump = false;
+              }
+            }
+          }
+
+          this.update = function(dt){
+
+                    this.velocityX *= this.friction * dt;
+
+                    for(i=0;i<collisionObjects.length;i++){
+
+                          objectChecking = collisionObjects[i];
+                            //check for collisions above
+
+                              if(checkCollision(this.bbu,objectChecking)&&objectChecking.solid){
+                                this.canMoveUp = false;
+                                // this.y=objectChecking.y+objectChecking.height;
+                                // this.imgY=objectChecking.y+objectChecking.height;
+                                break;
+                              }else{
+                                this.canMoveUp = true;
+                              }
+                          }
+
+                    for(i=0;i<collisionObjects.length;i++){
+                          objectChecking = collisionObjects[i];
+                            //check for collisions below
+
+                              if(checkCollision(this.bbd,objectChecking)&&objectChecking.solid){
+                                this.canMoveDown = false;
+                                //this.y=objectChecking.y-this.height+1;
+                                //this.imgY=objectChecking.y-this.height+1;
+                                break;
+                              }else if(checkCollision(this.bbd,objectChecking)&&objectChecking.platform&&this.bbd.y-this.velocityY*dt<objectChecking.y){
+                                this.canMoveDown = false;
+                                break;
+                              }else{
+                                this.canMoveDown = true;
+                              }
+                          }
+
+                      for(i=0;i<collisionObjects.length;i++){
+                          objectChecking = collisionObjects[i];
+                                if(checkCollision(this.bbl,objectChecking)&&objectChecking.solid){
+                                  this.canMoveLeft = false;
+                                  break;
+                                }else{
+                                  this.canMoveLeft = true;
+                                }
+                              }
+                      for(i=0;i<collisionObjects.length;i++){
+                          objectChecking = collisionObjects[i];
+                                if(checkCollision(this.bbr,objectChecking)&&objectChecking.solid){
+                                  this.canMoveRight = false;
+                                  break;
+                                }else{
+                                  this.canMoveRight = true;
+                                }
+                              }
+                      if(this.canMoveLeft){
+                        this.velocityX-=this.acceleration*dt;
+                      }else if(this.velocityX<0){
+                        this.velocityX=0;
+                      }
+
+                      if(this.canMoveRight){
+                        this.velocityX+=this.acceleration*dt;
+                      }else if(this.velocityX>0){
+                        this.velocityX=0;
+                      }
+
+                      if(this.canMoveDown){
+                        this.velocityY += this.gravity * dt;
+
+                      }else if(!this.canMoveDown&&this.velocityY>0){
+                        this.velocityY = 0;
+                      }
+
+                      if(!this.canMoveUp&&this.velocityY<0){
+                        this.velocityY=0;
+                      }
+
+                  this.x += this.velocityX * dt;
+                  this.imgX += this.velocityX * dt;
+                  this.y += this.velocityY * dt;
+                  this.imgY += this.velocityY * dt;
+
+                  this.bbu = {col:'yellow',x:this.x,y:this.y+this.velocityY*dt,width:this.width,height:this.height/4}
+                  this.bbd = {col:'blue',x:this.x,y:this.y+(this.height-2)+this.velocityY*dt,width:this.width, height:2}
+                  this.bbl = {col:'orange',x:this.x+this.velocityX*dt-1,y:this.y+3,width:this.width/2-3,height:this.height-6 }
+                  this.bbr = {col:'brown',x:this.x+(this.width/2-1)+1+this.velocityX*dt,y:this.y+3,width:this.width/2+3,height:this.height-6}
+              }
+        }
+
+function checkCollision(ob1,ob2){
+  if(ob1.x+ob1.width>ob2.x && ob1.x<ob2.x+ob2.width &&
+    ob1.y+ob1.height>ob2.y && ob1.y<ob2.y+ob2.height)
+  {
+       return true;
+   }
+}
+
+  </script>
+
+</body>
+
+</html>
