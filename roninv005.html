@@ -95,14 +95,14 @@
     function startGame(){
           fpsmeter = new FPSMeter({ decimals: 0, graph: true, theme: 'dark', left: '5px' });
           tiles = new Image();
-          tiles.src = 'tiles.png'
-          cat = new Image();
-          cat.src = 'samurai.png';
+          tiles.src = 'img/tiles.png'
+          playerImg = new Image();
+          playerImg.src = 'img/samurai.png';
           myGameArea.start();
           camera = new camera(0,0);
           addEvents();
           keyController = new keyInputController();
-          myGamePiece = new component(64,128,"red",0,390,'player',cat);
+          myGamePiece = new component(64,128,"red",0,390,'player',playerImg);
           collisionObjects = [];
           myMap = new level(1);
           myMap.populateMap();
