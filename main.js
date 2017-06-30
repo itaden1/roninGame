@@ -1,21 +1,7 @@
-<!doctype html>
-	<html>
-
-	<head>
-	<meta charset="utf-8" />
-	<title>Ronin</title>
-	<style>
-	canvas{border:1px solid black;}
-	</style>
-	<script src = "keys.js"></script>
-	<script src = "fpsmetre.js"></script>
-	<script src = "components.js"></script>
-	<script src = "levelv02.js"></script>
-	</head>
-	<body onload = "startGame()">
-	<h2>Welcome to Ronin!!</h2>
-	<script>
-
+require(levelv02.js);
+require(fpsmetre.js);
+require(keys.js);
+require(components.js);
 
 function gameArea(){
 	this.canvas = document.createElement('canvas'),
@@ -182,9 +168,3 @@ function startGame(){
 	game = new game();
 	game.start();
 }
-
-	</script>
-
-	</body>
-
-	</html>

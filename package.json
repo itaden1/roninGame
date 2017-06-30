@@ -1,0 +1,25 @@
+{
+  "name": "ronin-game",
+  "version": "1.0.0",
+  "description": "HTML5 javascript platform game",
+  "main": "roninv005.html",
+  "scripts": {
+	"dev-server": "webpack-dev-server --config webpack.config.js",
+	"build": "webpack --config webpack.config.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itaden1/roninGame.git"
+  },
+  "author": "Ethan Shearer",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/itaden1/roninGame/issues"
+  },
+  "homepage": "https://github.com/itaden1/roninGame#readme",
+  "devDependencies": {
+    "webpack": "^3.0.0",
+    "webpack-dev-server": "^2.5.0"
+  }
+}
