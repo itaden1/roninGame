@@ -1,28 +1,37 @@
-
 function keyInputController(){
-  this.keyDown = {},
+	this.addListeners = function(){
+		document.addEventListener('keydown', function(ev){
+			return this.keyHandler(ev, ev.keyCode, true); }.bind(this), false);
+		document.addEventListener('keyup', function(ev){
+			return this.keyHandler(ev, ev.keyCode, false); }.bind(this), false);
+	},
 
-  this.keyHandler = function(ev, key, pressed){
-          var KEY = {
-            32: 'SPACE',
-            87: 'W',
-            68: 'D',
-            65: 'A',
-            83: 'S'
-          }
-          var keyPressed = ev.keyCode;
-          ev.preventDefault();
-          var keyTranslate = KEY[keyPressed];
-          if(pressed){
+	//object to hold pressed keys
+	this.keyDown = {},
 
-            this.keyDown[keyTranslate] = true;
-          }
+	this.keyHandler = function(ev, key, pressed){
 
-          if(pressed===false){
-            this.keyDown[keyTranslate] = false;
+		//translation dictionary
+		var KEY = {
+			32: 'SPACE',
+			87: 'W',
+			68: 'D',
+			65: 'A',
+			83: 'S'
+		}
 
-    }
+		var keyPressed = ev.keyCode;
+		ev.preventDefault();
 
-  }
+		//translate key code to string using translate dictionary
+		var keyTranslate = KEY[keyPressed];
 
+		if(pressed){
+			this.keyDown[keyTranslate] = true;
+		}
+
+		if(pressed===false){
+			this.keyDown[keyTranslate] = false;
+		}
+	}
 }
