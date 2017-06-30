@@ -1,7 +1,7 @@
-require(levelv02.js);
-require(fpsmetre.js);
-require(keys.js);
-require(components.js);
+require('./levelv02.js');
+require('./fpsmetre.js');
+require('./keys.js');
+require('./components.js');
 
 function gameArea(){
 	this.canvas = document.createElement('canvas'),
@@ -164,7 +164,7 @@ function checkCollision(ob1,ob2){
 
 
 //Start the game!!
-function startGame(){
+(function startGame(){
 	game = new game();
 	game.start();
-}
+})
