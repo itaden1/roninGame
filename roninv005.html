@@ -1,22 +1,22 @@
 <!doctype html>
-<html>
+	<html>
 
-<head>
-<meta charset="utf-8" />
-<title>Ronin</title>
-<style>
-canvas{border:1px solid black;}
-</style>
-<script src = "keys.js"></script>
-<script src = "fpsmetre.js"></script>
-<script src = "levelv02.js"></script>
-</head>
-<body onload = "startGame()">
-<h2>Welcome to Ronin!!</h2>
-<script>
+	<head>
+	<meta charset="utf-8" />
+	<title>Ronin</title>
+	<style>
+	canvas{border:1px solid black;}
+	</style>
+	<script src = "keys.js"></script>
+	<script src = "fpsmetre.js"></script>
+	<script src = "levelv02.js"></script>
+	</head>
+	<body onload = "startGame()">
+	<h2>Welcome to Ronin!!</h2>
+	<script>
 
 
-/*
+	/*
 #===============================================#
 #     The game area!                            #
 #-----------------------------------------------#
@@ -26,43 +26,45 @@ canvas{border:1px solid black;}
 # The clear function refreshes the game area    #
 #                                               #
 #===============================================#
- */
+*/
 
-function gameArea(){
-	this.canvas = document.createElement('canvas'),
-	this.start = function() {
-			 this.tileW = 64;
-			 this.tileH = 64;
-			 this.canvas.width = 1280;
-			 this.canvas.height = 720;
-			 this.context = this.canvas.getContext('2d');
-			 document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+	function gameArea(){
+		this.canvas = document.createElement('canvas'),
+			this.start = function() {
+				this.tileW = 64;
+				this.tileH = 64;
+				this.canvas.width = 1280;
+				this.canvas.height = 720;
+				this.context = this.canvas.getContext('2d');
+				document.body.insertBefore(this.canvas, document.body.childNodes[0]);
 
-		 },
-	this.clear = function(){
-			this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-		}
-}
+			},
+			this.clear = function(){
+				this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+			}
+	}
 
 function camera(x,y){
 	this.x=x,
-	this.y=y,
-	this.width=1280,
-	this.height=720,
-	this.update = function(dt,focus){
-		if(focus.x>this.width/2&&focus.x<myMap.map.length*myMap.tileH-this.width/2){
-			this.x=focus.x-this.width/2;
-		}
-		if(focus.y<myMap.map[0].length*myMap.tileH){
-			this.y=focus.y-this.height/3;
-		}
+		this.y=y,
+		this.width=1280,
+		this.height=720,
+		this.update = function(dt,focus){
+			var map = game.levelMap;
+			if(focus.x>this.width/2&&focus.x<map.map.length*map.tileH-this.width/2){
+				this.x=focus.x-this.width/2;
+			}
+			if(focus.y<map.map[0].length*map.tileH){
+				this.y=focus.y-this.height/3;
+			}
 
-	}
+		}
 	this.render = function(arr){
+		
 		for(i=0;i<arr.length;i++){
 			var item=arr[i];
 			if(checkCollision(this,item)){
-				var ctx = myGameArea.context;
+				var ctx = game.gameArea.context;
 				img = item.img;
 				sx = item.imgSrcX;
 				sy = item.imgSrcY;
@@ -86,17 +88,17 @@ function camera(x,y){
 #=====================#
 #  Ready the game     #
 #=====================#
- */
+*/
 
 function timeStamp(){
 	return window.performance && window.performance.now ? window.performance.now() : new Date().getTime();
 }
-
+/*
 function startGame(){
 	fpsmeter = new FPSMeter({ decimals: 0, graph: true, theme: 'dark', left: '5px' });
 	tiles = new Image();
 	tiles.src = 'img/tiles.png'
-		playerImg = new Image();
+	playerImg = new Image();
 	playerImg.src = 'img/samurai.png';
 	myGameArea = new gameArea();
 	myGameArea.start();
@@ -112,54 +114,97 @@ function startGame(){
 	last = timeStamp();
 	requestAnimationFrame(gameLoop);
 
-}
+}*/
 //clean up WIP
 function game(){
-	this.gameArea = new GameArea();
 	this.start = function(){
+
+		//load key components 
 		this.fpsMeter = new FPSMeter({ decimals: 0, graph: true, theme: 'dark', left: '5px' });
+		this.gameArea = new gameArea();
+		this.camera = new camera(0,0);
+		this.controller = new keyInputController();
+		this.levelMap = new level(1);
+
+		//load images
 		this.tiles = new Image();
 		this.playerImg = new Image();
 		this.tiles.src ='img/tiles.png';
-		this.playerImg.src = 'img/samurai.png';
-	}
-	this.gameLoop = function(){
-		fpsmeter.tickStart();
-		now = timeStamp();
-		dt = Math.min(1,(now - last) / 1000);
-		myGameArea.clear();
-		var renderList=[];
-		checkKeys(dt);
-		myGamePiece.update(dt);
+		this.playerImg.src = 'img/watercolor.png';
 
-		//renderList.push(myGamePiece.bbu,myGamePiece.bbd,myGamePiece.bbl,myGamePiece.bbr);
-		camera.update(dt,myGamePiece);
-		for(i=0;i<collisionObjects.length;i++){
-			renderList.push(collisionObjects[i])
+		//initialise components
+		this.gameArea.start();
+		this.player = new component(64,128,"red",0,390,'player',this.playerImg);
+		this.levelMap.populateMap();
+
+		//start the update clock
+		this.now = timeStamp();
+		this.dt = timeStamp();
+		this.last = timeStamp();
+
+		//start the game loop
+		requestAnimationFrame(this.gameLoop.bind(this));	
+	},
+
+	this.checkKeys = function(){
+
+		if(this.controller.keyDown.D){
+			this.player.velocityX+=this.player.acceleration;
+			}
+		if(this.controller.keyDown.A){
+			this.player.velocityX-=this.player.acceleration;
+			}
+
+		if(this.controller.keyDown.SPACE){
+			this.player.jump(this.dt);
+		}else{
+			this.player.canJump=true;
 		}
-		renderList.push(myGamePiece);
-		camera.render(renderList);
-		fpsmeter.tick();
-		requestAnimationFrame(gameLoop);	
+	},
+
+	this.gameLoop = function(){
+		//console.log(this.fpsMeter);
+		this.fpsMeter.tickStart();
+
+		this.now = timeStamp();
+		this.dt = Math.min(1,(this.now - this.last) / 1000);
+		this.gameArea.clear();
+		this.checkKeys();
+
+		//update the player and camera position
+		this.player.update(this.dt);
+		this.camera.update(this.dt,this.player);
+
+		//list of objects to be rendered
+		var renderList=[];
+		for(i=0;i<this.levelMap.collisionObjects.length;i++){
+			renderList.push(this.levelMap.collisionObjects[i])
+		}
+		renderList.push(this.player);
+
+		//Render
+		this.camera.render(renderList);
+		this.fpsMeter.tick();
+
+		//start the next loop
+		requestAnimationFrame(this.gameLoop.bind(this));	
 	}
-
-
 }
 /*
 #============================#
 #  add event listeners to    #
 #============================#
- */
+*/
 
 function addEvents(){
 	document.addEventListener('keydown', function(ev){
-			return keyController.keyHandler(ev, ev.keyCode, true); }, false);
+		return keyController.keyHandler(ev, ev.keyCode, true); }, false);
 	document.addEventListener('keyup', function(ev){
-			return keyController.keyHandler(ev, ev.keyCode, false); }, false);
+		return keyController.keyHandler(ev, ev.keyCode, false); }, false);
 
 }
 
-
+/*
 function checkKeys(dt){
 
 
@@ -176,7 +221,7 @@ function checkKeys(dt){
 		myGamePiece.canJump=true;
 	}
 
-}
+}*/
 /*
 #=======================#
 #  Game update          #
@@ -185,8 +230,8 @@ function checkKeys(dt){
 # Main game loop stuff  #
 #                       #
 #=======================#
- */
-
+*/
+/*
 function gameLoop(){
 	fpsmeter.tickStart();
 	now = timeStamp();
@@ -207,7 +252,7 @@ function gameLoop(){
 	requestAnimationFrame(gameLoop);
 
 }
-
+*/
 
 function tile(x,y,w,h,solid,platform,img,sx,sy){
 
@@ -270,7 +315,7 @@ function component(width, height, color, x, y, name,img){
 	}
 
 	this.update = function(dt){
-
+		var collisionObjects = game.levelMap.collisionObjects;
 		this.velocityX *= this.friction * dt;
 
 		for(i=0;i<collisionObjects.length;i++){
@@ -360,14 +405,19 @@ function component(width, height, color, x, y, name,img){
 
 function checkCollision(ob1,ob2){
 	if(ob1.x+ob1.width>ob2.x && ob1.x<ob2.x+ob2.width &&
-			ob1.y+ob1.height>ob2.y && ob1.y<ob2.y+ob2.height)
+		ob1.y+ob1.height>ob2.y && ob1.y<ob2.y+ob2.height)
 	{
 		return true;
 	}
 }
 
-</script>
+function startGame(){
+	game = new game();
+	game.start();
+}
 
-</body>
+	</script>
 
-</html>
+	</body>
+
+	</html>
