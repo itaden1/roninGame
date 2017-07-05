@@ -1,5 +1,3 @@
-
-//constructor for player object
 function component(width, height, color, x, y, name,img){
 	
 	//setbasic values
@@ -56,60 +54,7 @@ function component(width, height, color, x, y, name,img){
 	}
 
 	this.update = function(dt){
-
-		var collisionObjects = game.levelMap.collisionObjects;
 		this.velocityX *= this.friction * dt;
-
-		for(i=0;i<collisionObjects.length;i++){
-
-			objectChecking = collisionObjects[i];
-			//check for collisions above
-
-			if(checkCollision(this.bbu,objectChecking)&&objectChecking.solid){
-				this.canMoveUp = false;
-				// this.y=objectChecking.y+objectChecking.height;
-				// this.imgY=objectChecking.y+objectChecking.height;
-				break;
-			}else{
-				this.canMoveUp = true;
-			}
-		}
-
-		for(i=0;i<collisionObjects.length;i++){
-			objectChecking = collisionObjects[i];
-			//check for collisions below
-
-			if(checkCollision(this.bbd,objectChecking)&&objectChecking.solid){
-				this.canMoveDown = false;
-				//this.y=objectChecking.y-this.height+1;
-				//this.imgY=objectChecking.y-this.height+1;
-				break;
-			}else if(checkCollision(this.bbd,objectChecking)&&objectChecking.platform&&this.bbd.y-this.velocityY*dt<objectChecking.y){
-				this.canMoveDown = false;
-				break;
-			}else{
-				this.canMoveDown = true;
-			}
-		}
-
-		for(i=0;i<collisionObjects.length;i++){
-			objectChecking = collisionObjects[i];
-			if(checkCollision(this.bbl,objectChecking)&&objectChecking.solid){
-				this.canMoveLeft = false;
-				break;
-			}else{
-				this.canMoveLeft = true;
-			}
-		}
-		for(i=0;i<collisionObjects.length;i++){
-			objectChecking = collisionObjects[i];
-			if(checkCollision(this.bbr,objectChecking)&&objectChecking.solid){
-				this.canMoveRight = false;
-				break;
-			}else{
-				this.canMoveRight = true;
-			}
-		}
 		if(this.canMoveLeft){
 			this.velocityX-=this.acceleration*dt;
 		}else if(this.velocityX<0){
@@ -144,3 +89,5 @@ function component(width, height, color, x, y, name,img){
 		this.bbr = {col:'brown',x:this.x+(this.width/2-1)+1+this.velocityX*dt,y:this.y+3,width:this.width/2+3,height:this.height-6}
 	}
 }
+
+module.exports = component;

@@ -1,3 +1,5 @@
+var game = require('./main.js');
+
 
 function tile(x,y,w,h,solid,platform,img,sx,sy){
 
@@ -117,3 +119,6 @@ var mapGrids = {
 	5:[]
 
 }
+//level = new level();
+console.log(level);
+module.exports = level;

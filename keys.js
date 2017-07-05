@@ -35,3 +35,5 @@ function keyInputController(){
 		}
 	}
 }
+//var keys = new keyInputController();
+module.exports = keyInputController;
