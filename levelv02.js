@@ -1,5 +1,3 @@
-var game = require('./main.js');
-
 
 function tile(x,y,w,h,solid,platform,img,sx,sy){
 
@@ -25,61 +23,63 @@ function tile(x,y,w,h,solid,platform,img,sx,sy){
 
 }
 
-function level(level){
+function level(level,img){
 
 	this.tileW = 64;
 	this.tileH = 64;
 
 	this.collisionObjects = [];
-
+	this.image = img;
 	this.map = mapGrids[level];
 
 	//iterate through the array map and generate tiles
 	this.populateMap = function(){
+		var image = img;
 		for(x=0;x<this.map[0].length;x++){
 			for(y=0;y<this.map.length;y++){
 				if(this.map[y][x]===1){
-					var t = new tile(x*this.tileW,y*this.tileH,this.tileW,this.tileH,true,false,game.tiles,0,0);
+					var t = new tile(x*this.tileW,y*this.tileH,this.tileW,this.tileH,true,false,image,0,0);
 					this.map[y][x]=t;
 					this.collisionObjects.push(t);
+
 				}
 				else if(this.map[y][x]===2){
-					var t = new tile(x*this.tileW,y*this.tileH,this.tileW,this.tileH,true,false,game.tiles,this.tileW,0);
+					var t = new tile(x*this.tileW,y*this.tileH,this.tileW,this.tileH,true,false,image,this.tileW,0);
 					this.map[y][x]=t;
 					this.collisionObjects.push(t);
 				}
 				else if(this.map[y][x]===3){
-					var t = new tile(x*this.tileW,y*this.tileH,this.tileW,this.tileH,true,false,game.tiles,this.tileW*2,0);
+					var t = new tile(x*this.tileW,y*this.tileH,this.tileW,this.tileH,true,false,image,this.tileW*2,0);
 					this.map[y][x]=t;
 					this.collisionObjects.push(t);
 				}
 				else if(this.map[y][x]===4){
-					var t = new tile(x*this.tileW,y*this.tileH,this.tileW,this.tileH,true,false,game.tiles,0,this.tileH);
+					var t = new tile(x*this.tileW,y*this.tileH,this.tileW,this.tileH,true,false,image,0,this.tileH);
 					this.map[y][x]=t;
 					this.collisionObjects.push(t);
 				}
 				else if(this.map[y][x]===5){
-					var t = new tile(x*this.tileW,y*this.tileH,this.tileW,this.tileH,true,false,game.tiles,this.tileW,this.tileH);
+					var t = new tile(x*this.tileW,y*this.tileH,this.tileW,this.tileH,true,false,image,this.tileW,this.tileH);
 					this.map[y][x]=t;
 					this.collisionObjects.push(t);
 				}
 				else if(this.map[y][x]===6){
-					var t = new tile(x*this.tileW,y*this.tileH,this.tileW,this.tileH,true,false,game.tiles,this.tileW*2,this.tileH);
+					var t = new tile(x*this.tileW,y*this.tileH,this.tileW,this.tileH,true,false,image,this.tileW*2,this.tileH);
 					this.map[y][x]=t;
 					this.collisionObjects.push(t);
 				}
 				else if(this.map[y][x]===7){
-					var t = new tile(x*this.tileW,y*this.tileH,this.tileW,this.tileH,false,false,game.tiles,this.tileW*3,0);
+					var t = new tile(x*this.tileW,y*this.tileH,this.tileW,this.tileH,false,false,image,this.tileW*3,0);
 					this.map[y][x]=t;
 					this.collisionObjects.push(t);
 				}
 				else if(this.map[y][x]===8){
-					var t = new tile(x*this.tileW,y*this.tileH,this.tileW,this.tileH,false,false,game.tiles,this.tileW*3,this.tileH*2);
+					var t = new tile(x*this.tileW,y*this.tileH,this.tileW,this.tileH,false,false,image,this.tileW*3,this.tileH*2);
 					this.map[y][x]=t;
 					this.collisionObjects.push(t);
 				}
 				else if(this.map[y][x]===9){
-					var t = new tile(x*this.tileW,y*this.tileH,this.tileW,this.tileH,false,true,game.tiles,this.tileW*3,this.tileH);
+					var t = new tile(x*this.tileW,y*this.tileH,this.tileW,this.tileH,false,true,image,this.tileW*3,this.tileH);
 					this.map[y][x]=t;
 					this.collisionObjects.push(t);
 
@@ -120,5 +120,5 @@ var mapGrids = {
 
 }
 //level = new level();
-console.log(level);
+
 module.exports = level;

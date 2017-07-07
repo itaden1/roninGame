@@ -12,7 +12,14 @@ module.exports = {
 	},
 	module:{
 		loaders: [
-			
+			{
+				test: /\.(jpeg|png|gif|svg)$/,
+				loaders:'file-loader',
+				options:{
+					name: './dist[name].[ext]',
+				},
+				
+			},
 		]
 	},
 	plugins: [new HtmlWebpackPlugin()] 	

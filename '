@@ -3,7 +3,7 @@ var component = require('./components.js');
 var level = require('./levelv02.js');
 var keyInputController = require('./keys.js');
 var camera = require('./camera.js');
-var gameArea = require('./canvas.js');
+var canvas = require('./canvas.js');
 
 
 
@@ -23,18 +23,16 @@ function game(){
 		this.collisionChecker = new collisionChecker();
 
 		this.gameArea = new gameArea();
-		this.camera = new camera(0,0,this.collisionChecker,this.gameArea);
+		this.camera = new camera(0,0,this.collisionChecker);
 		this.controller = new keyInputController();
 		this.controller.addListeners();
-		
+		this.levelMap = new level(1);
 
 		//load images
 		this.tiles = new Image();
 		this.playerImg = new Image();
 		this.tiles.src ='img/tiles.png';
 		this.playerImg.src = 'img/watercolor.png';
-
-		this.levelMap = new level(1,this.tiles);
 
 		//initialise components
 		this.gameArea.start();
@@ -91,8 +89,9 @@ function game(){
 			renderList.push(this.levelMap.collisionObjects[i])
 		}
 		renderList.push(this.player);
+
 		//Render
-		this.camera.render(renderList);
+		this.camera.render(renderList,this.levelMap);
 		this.fpsMeter.tick();
 
 		//start the next loop
