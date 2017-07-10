@@ -10,7 +10,7 @@ function collisionChecker(){
 	},
 	this.checkMovement = function(ob1,ob2){
 		var collisionObjects = ob2;
-
+		
 		for(i=0;i<collisionObjects.length;i++){
 
 			objectChecking = collisionObjects[i];
@@ -35,10 +35,10 @@ function collisionChecker(){
 				//this.imgY=objectChecking.y-this.height+1;
 				break;
 			}else if(this.check(ob1.bbd,objectChecking)&&objectChecking.platform&&ob1.bbd.y-ob1.velocityY*dt<objectChecking.y){
-				this.canMoveDown = false;
+				ob1.canMoveDown = false;
 				break;
 			}else{
-				this.canMoveDown = true;
+				ob1.canMoveDown = true;
 			}
 		}
 

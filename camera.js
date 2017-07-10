@@ -11,16 +11,19 @@ function camera(x,y,c,canvas){
 	this.collisionChecker = new collisionChecker();
 	//Update the cameras position
 	this.update = function(dt,focus,map){
-		
 		var map = map;
 		//focus the camera on the player
 		if(focus.x>this.width/2&&focus.x<map[0].length*map.tileH-this.width/2){
+			console.log('stuff');
 			this.x=focus.x-this.width/2;
 		}
 		
 		if(focus.y<map.length*map.tileH){
+			console.log('stuff2');
 			this.y=focus.y-this.height/3;
 		}
+			this.x=focus.x-this.width/2;
+			this.y=focus.y-this.height/3;
 	}
 
 	//Render the game with list of objects to render

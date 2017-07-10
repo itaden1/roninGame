@@ -78,12 +78,12 @@ function game(){
 
 		//do collision checking
 		for(var i = 0;i<this.levelMap.collisionObjects.length;i++){
-			this.collisionChecker.checkMovement(this.player,this.levelMap.collisionObjects[i])
+			this.collisionChecker.checkMovement(this.player,this.levelMap.collisionObjects)
 		}
 
 		//update the player and camera position
 		this.player.update(this.dt);
-		this.camera.update(this.dt,this.player,this.levelMap);
+		this.camera.update(this.dt,this.player,this.levelMap.map);
 
 		//list of objects to be rendered
 		var renderList=[];
