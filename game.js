@@ -1,6 +1,6 @@
 var collisionChecker = require('./collisionChecker.js');
 var component = require('./components.js');
-var level = require('./levelv02.js');
+var level = require('./level.js');
 var keyInputController = require('./keys.js');
 var camera = require('./camera.js');
 var gameArea = require('./canvas.js');

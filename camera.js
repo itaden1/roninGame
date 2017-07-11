@@ -9,21 +9,18 @@ function camera(x,y,c,canvas){
 	
 	this.gameArea = canvas;
 	this.collisionChecker = new collisionChecker();
+
 	//Update the cameras position
 	this.update = function(dt,focus,map){
 		var map = map;
+
 		//focus the camera on the player
-		if(focus.x>4*64){
-			console.log('stuff');
-			this.x=focus.x-4*64;
+		if(focus.x>4*64 && focus.x<map[0].length*64-this.width){
+			this.x = focus.x-4*64;
 		}
-		
-		//if(){
-		//	console.log('stuff2');
-		//	this.y=focus.y-this.height/3;
-		//}
-			//this.x=focus.x-this.width/2;
-			this.y=focus.y-this.height/3;
+		if(focus.y<map.length*64-this.height/2){
+			this.y = focus.y-this.height/2;
+		}
 	}
 
 	//Render the game with list of objects to render
@@ -46,6 +43,8 @@ function camera(x,y,c,canvas){
 
 				//draw to the canvas
 				ctx.drawImage(img,sx,sy,sw,sh,dx,dy,dw,dh);
+
+				//uncomment the belowto see bounding boxes
 				//ctx.fillStyle = item.col;
 				//ctx.fillRect(item.x-this.x, item.y-this.y, item.width, item.height);
 				// if(item.img){ctx.drawImage(img,sx,sy,sw,sh,dx,dy,dw,dh);}
