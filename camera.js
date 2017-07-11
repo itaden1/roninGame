@@ -13,16 +13,16 @@ function camera(x,y,c,canvas){
 	this.update = function(dt,focus,map){
 		var map = map;
 		//focus the camera on the player
-		if(focus.x>this.width/2&&focus.x<map[0].length*map.tileH-this.width/2){
+		if(focus.x>4*64){
 			console.log('stuff');
-			this.x=focus.x-this.width/2;
+			this.x=focus.x-4*64;
 		}
 		
-		if(focus.y<map.length*map.tileH){
-			console.log('stuff2');
-			this.y=focus.y-this.height/3;
-		}
-			this.x=focus.x-this.width/2;
+		//if(){
+		//	console.log('stuff2');
+		//	this.y=focus.y-this.height/3;
+		//}
+			//this.x=focus.x-this.width/2;
 			this.y=focus.y-this.height/3;
 	}
 

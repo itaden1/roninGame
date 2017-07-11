@@ -44,15 +44,11 @@ function component(width, height, color, x, y, name,img){
 	this.action = 'default';
 
 	this.jump = function(dt){
-		var collisionObjects = game.levelMap.collisionObjects;
-		for(i=0;i<collisionObjects.length;i++){
-			if(checkCollision(this,collisionObjects[i])&&this.canJump){
-				this.velocityY=-7;
-				this.canJump = false;
-			}
-		}
+		if(!this.canMoveDown && this.canJump){
+			this.velocityY=-7;
+			this.canJump = false;
+		}		
 	}
-
 	this.update = function(dt){
 
 		this.velocityX *= this.friction * dt;
