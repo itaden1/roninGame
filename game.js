@@ -65,7 +65,14 @@ function game(){
 			this.player.canJump=true;
 		}
 	},
-
+	this.restart = function(){
+		this.player.x=64;
+		this.player.y=128;
+		var self = this;
+		window.requestAnimationFrame(function(){
+			self.gameLoop();
+		});
+	},
 	this.gameLoop = function(){
 		
 		this.fpsMeter.tickStart();
@@ -79,6 +86,10 @@ function game(){
 		//do collision checking
 		for(var i = 0;i<this.levelMap.collisionObjects.length;i++){
 			this.collisionChecker.checkMovement(this.player,this.levelMap.collisionObjects)
+		}
+		if(this.player.y>this.levelMap.map.length*64){
+			console.log('deeath');
+			this.start();
 		}
 
 		//update the player and camera position
@@ -96,7 +107,10 @@ function game(){
 		this.fpsMeter.tick();
 
 		//start the next loop
-		requestAnimationFrame(this.gameLoop.bind(this));	
+		var self = this;
+		window.requestAnimationFrame(function(){
+			self.gameLoop();
+		});
 	}
 }
 

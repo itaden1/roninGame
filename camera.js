@@ -15,7 +15,7 @@ function camera(x,y,c,canvas){
 		var map = map;
 
 		//focus the camera on the player
-		if(focus.x>4*64 && focus.x<map[0].length*64-this.width){
+		if(focus.x>4*64 && focus.x<map[0].length*64){
 			this.x = focus.x-4*64;
 		}
 		if(focus.y<map.length*64-this.height/2){
