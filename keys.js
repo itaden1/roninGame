@@ -5,7 +5,13 @@ function keyInputController(){
 		document.addEventListener('keyup', function(ev){
 			return this.keyHandler(ev, ev.keyCode, false); }.bind(this), false);
 	},
-
+	this.removeListeners = function(){
+		console.log('removinglisteners');
+		document.removeEventListener('keydown', function(ev){
+			return this.keyHandler(ev, ev.keyCode, true); }.bind(this), false);
+		document.removeEventListener('keyup', function(ev){
+			return this.keyHandler(ev, ev.keyCode, false); }.bind(this), false);
+		},
 	//object to hold pressed keys
 	this.keyDown = {},
 

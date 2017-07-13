@@ -49,7 +49,6 @@ function component(width, height, color, x, y, name,img){
 		}		
 	}
 	this.update = function(dt){
-
 		this.velocityX *= this.friction * dt;
 		if(this.canMoveLeft){
 			this.velocityX-=this.acceleration*dt;

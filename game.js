@@ -15,7 +15,6 @@ function timeStamp(){
 
 function game(){
 	this.start = function(){
-
 		//load key components 
 		this.fpsMeter = new FPSMeter({ decimals: 0, graph: true, theme: 'dark', left: '5px' });
 		
@@ -38,8 +37,19 @@ function game(){
 
 		//initialise components
 		this.gameArea.start();
-		this.player = new component(64,128,"red",0,390,'player',this.playerImg);
 		this.levelMap.populateMap();
+
+		//find start of level
+		var x = 128;
+		var y = 0;
+		for(var i = 0; i < this.levelMap.map.length; i++){
+			if(this.levelMap.map[i][0].solid){
+				console.log(this.levelMap.map[i][0].y);
+				y = this.levelMap.map[i][0].y-128;
+				break;
+			}
+		}
+		this.player = new component(64,128,"red",x,y,'player',this.playerImg);
 
 		//initiate delta time
 		this.now = timeStamp();
@@ -66,8 +76,24 @@ function game(){
 		}
 	},
 	this.restart = function(){
-		this.player.x=64;
-		this.player.y=128;
+		console.log('restarting');
+		//find start of level
+		var x = 128;
+		var y = 0;
+		for(var i = 0; i < this.levelMap.map.length; i++){
+			if(this.levelMap.map[i][0].solid){
+				y = this.levelMap.map[i][0].y-143;
+				break;
+			}
+		}
+		this.player.x = x;
+		this.player.y = y;
+		this.player.imgX = x;
+		this.player.imgY = y;
+		this.camera.x = 0;
+		this.camera.y = 0;
+		this.camera.update(this.dt,this.player,this.levelMap.map);
+		
 		var self = this;
 		window.requestAnimationFrame(function(){
 			self.gameLoop();
@@ -87,10 +113,6 @@ function game(){
 		for(var i = 0;i<this.levelMap.collisionObjects.length;i++){
 			this.collisionChecker.checkMovement(this.player,this.levelMap.collisionObjects)
 		}
-		if(this.player.y>this.levelMap.map.length*64){
-			console.log('deeath');
-			this.start();
-		}
 
 		//update the player and camera position
 		this.player.update(this.dt);
@@ -105,15 +127,19 @@ function game(){
 		//Render
 		this.camera.render(renderList);
 		this.fpsMeter.tick();
-
+		
+		//if the player is dead restart game
+		if(this.player.y>this.levelMap.map.length*64){
+			console.log('death');
+			this.restart();
+		}else{
 		//start the next loop
-		var self = this;
-		window.requestAnimationFrame(function(){
-			self.gameLoop();
-		});
+			var self = this;
+			window.requestAnimationFrame(function(){
+				self.gameLoop();
+			});
+		}
 	}
 }
-
-
 
 module.exports = game;
