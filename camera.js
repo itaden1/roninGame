@@ -15,7 +15,7 @@ function camera(x,y,c,canvas){
 		var map = map;
 
 		//focus the camera on the player
-		if(focus.x>4*64 && focus.x<map[0].length*64){
+		if(focus.x>4*64 && focus.x<map[0].length*64-this.width+4*64){
 			this.x = focus.x-4*64;
 		}
 		if(focus.y<map.length*64-this.height/2){
@@ -24,13 +24,18 @@ function camera(x,y,c,canvas){
 	}
 
 	//Render the game with list of objects to render
-	this.render = function(arr){
+	this.render = function(arr,background){
+		var ctx = this.gameArea.context;
+		
+		//draw background
+		ctx.drawImage(background,0,0);
+
+
 		for(i=0;i<arr.length;i++){
 			var item=arr[i];
 			
 			//Check if the object is in view
 			if(this.collisionChecker.check(this,item)){
-				var ctx = this.gameArea.context;
 				var img = item.img;
 				var sx = item.imgSrcX;
 				var sy = item.imgSrcY;

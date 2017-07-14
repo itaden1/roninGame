@@ -31,9 +31,11 @@ function game(){
 		this.tiles = new Image();
 		this.playerImg = new Image();
 		this.tiles.src ='img/tiles.png';
+		this.background = new Image();
+		this.background.src = 'img/mountain.jpg';
 		this.playerImg.src = 'img/watercolor.png';
 
-		this.levelMap = new level(1,this.tiles);
+		this.levelMap = new level(2,this.tiles);
 
 		//initialise components
 		this.gameArea.start();
@@ -82,10 +84,12 @@ function game(){
 		var y = 0;
 		for(var i = 0; i < this.levelMap.map.length; i++){
 			if(this.levelMap.map[i][0].solid){
-				y = this.levelMap.map[i][0].y-143;
+				y = this.levelMap.map[i][0].y-this.player.height;
 				break;
 			}
 		}
+		this.player.velocityX = 0;
+		this.player.velocityY = 0;
 		this.player.x = x;
 		this.player.y = y;
 		this.player.imgX = x;
@@ -124,8 +128,9 @@ function game(){
 			renderList.push(this.levelMap.collisionObjects[i])
 		}
 		renderList.push(this.player);
+	
 		//Render
-		this.camera.render(renderList);
+		this.camera.render(renderList,this.background);
 		this.fpsMeter.tick();
 		
 		//if the player is dead restart game
