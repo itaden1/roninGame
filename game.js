@@ -48,18 +48,22 @@ function game(){
 		var y = 0;
 		for(var i = 0; i < this.levelMap.map.length; i++){
 			if(this.levelMap.map[i][0].solid){
-				console.log(this.levelMap.map[i][0].y);
 				y = this.levelMap.map[i][0].y-128;
 				break;
 			}
 		}
 		this.player = new component(64,128,"red",x,y,'player',this.playerImg);
 		//create the enemy
-		this.enemy = new component(64,128,"blue",900,700,'enemy',this.enemyImg);
-		//add ai component to the enemy
-		this.enemy.ai = new ai();
-		this.enemy.ai.init(this.collisionChecker,this.player);
-
+		this.enemies = []
+		for(var i=0;i<15;i++){
+			var random = Math.floor((Math.random()*this.levelMap.map.length) +1);
+			var start = random * 640;
+			var enemy = new component(64,128,"blue",start,500,'enemy',this.enemyImg);
+			//add ai component to the enemy
+			enemy.ai = new ai();
+			enemy.ai.init(this.collisionChecker,this.player);
+			this.enemies.push(enemy);
+		}
 		//initiate delta time
 		this.now = timeStamp();
 		this.dt = timeStamp();
@@ -118,27 +122,32 @@ function game(){
 		this.now = timeStamp();
 		this.dt = Math.min(1,(this.now - this.last) / 1000);
 		this.gameArea.clear();
+		
+		//list of objects to be rendered
+		var renderList=[];
 
-		//check for player, enemy actions
 		this.checkKeys();
-		this.enemy.ai.aiDo(this.enemy,this.levelMap.collisionObjects);
+
 		//do collision checking
 		for(var i = 0;i<this.levelMap.collisionObjects.length;i++){
 			this.collisionChecker.checkMovement(this.player,this.levelMap.collisionObjects)
-			this.collisionChecker.checkMovement(this.enemy,this.levelMap.collisionObjects)
 		}
 
-		//update the player, enemy and camera position
+		//enemy actions
+		for(var i=0;i<this.enemies.length;i++){
+			this.enemies[i].update(this.dt);
+			this.enemies[i].ai.aiDo(this.enemies[i],this.levelMap.collisionObjects);
+			this.collisionChecker.checkMovement(this.enemies[i],this.levelMap.collisionObjects)
+			renderList.push(this.enemies[i]);
+		}
+		//update the player, and camera position
 		this.player.update(this.dt);
-		this.enemy.update(this.dt);
 		this.camera.update(this.dt,this.player,this.levelMap.map);
 
-		//list of objects to be rendered
-		var renderList=[];
 		for(i=0;i<this.levelMap.collisionObjects.length;i++){
 			renderList.push(this.levelMap.collisionObjects[i])
 		}
-		renderList.push(this.player,this.enemy);
+		renderList.push(this.player);
 	
 		//Render
 		this.camera.render(renderList,this.background);

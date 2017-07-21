@@ -45,7 +45,6 @@ function component(width, height, color, x, y, name,img){
 	this.canMoveLeft = false;
 
 	this.jump = function(dt){
-		console.log(this.canJump);
 		if(!this.canMoveDown && this.canJump){
 			this.velocityY=-7;
 			this.canJump = false;
