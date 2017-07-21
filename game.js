@@ -4,7 +4,7 @@ var level = require('./level.js');
 var keyInputController = require('./keys.js');
 var camera = require('./camera.js');
 var gameArea = require('./canvas.js');
-
+var ai = require('./ai.js');
 
 
 //function to find delta time
@@ -30,12 +30,14 @@ function game(){
 		//load images
 		this.tiles = new Image();
 		this.playerImg = new Image();
-		this.tiles.src ='img/tiles.png';
+		this.enemyImg = new Image();
 		this.background = new Image();
+		this.tiles.src ='img/tiles.png';
 		this.background.src = 'img/mountain.jpg';
 		this.playerImg.src = 'img/watercolor.png';
+		this.enemyImg.src = 'img/samurai.png';
 
-		this.levelMap = new level(2,this.tiles);
+		this.levelMap = new level(1,this.tiles);
 
 		//initialise components
 		this.gameArea.start();
@@ -52,6 +54,11 @@ function game(){
 			}
 		}
 		this.player = new component(64,128,"red",x,y,'player',this.playerImg);
+		//create the enemy
+		this.enemy = new component(64,128,"blue",900,700,'enemy',this.enemyImg);
+		//add ai component to the enemy
+		this.enemy.ai = new ai();
+		this.enemy.ai.init(this.collisionChecker,this.player);
 
 		//initiate delta time
 		this.now = timeStamp();
@@ -111,15 +118,19 @@ function game(){
 		this.now = timeStamp();
 		this.dt = Math.min(1,(this.now - this.last) / 1000);
 		this.gameArea.clear();
-		this.checkKeys();
 
+		//check for player, enemy actions
+		this.checkKeys();
+		this.enemy.ai.aiDo(this.enemy,this.levelMap.collisionObjects);
 		//do collision checking
 		for(var i = 0;i<this.levelMap.collisionObjects.length;i++){
 			this.collisionChecker.checkMovement(this.player,this.levelMap.collisionObjects)
+			this.collisionChecker.checkMovement(this.enemy,this.levelMap.collisionObjects)
 		}
 
-		//update the player and camera position
+		//update the player, enemy and camera position
 		this.player.update(this.dt);
+		this.enemy.update(this.dt);
 		this.camera.update(this.dt,this.player,this.levelMap.map);
 
 		//list of objects to be rendered
@@ -127,7 +138,7 @@ function game(){
 		for(i=0;i<this.levelMap.collisionObjects.length;i++){
 			renderList.push(this.levelMap.collisionObjects[i])
 		}
-		renderList.push(this.player);
+		renderList.push(this.player,this.enemy);
 	
 		//Render
 		this.camera.render(renderList,this.background);

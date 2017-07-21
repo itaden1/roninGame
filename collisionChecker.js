@@ -8,6 +8,13 @@ function collisionChecker(){
 		return true;
 		}
 	},
+	this.checkHoles = function(ob1,ob2){
+		//var space = {x:ob1.x+ob1.velocityX,y:ob1.y+ob1.height,width:ob1.width,height:ob1.height}
+		if(this.check(ob1,ob2)){
+			return true;
+		}
+
+	},
 	this.checkMovement = function(ob1,ob2){
 		var collisionObjects = ob2;
 		

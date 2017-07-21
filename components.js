@@ -1,3 +1,5 @@
+var ai = require('./ai.js');
+
 function component(width, height, color, x, y, name,img){
 	
 	//setbasic values
@@ -43,6 +45,7 @@ function component(width, height, color, x, y, name,img){
 	this.canMoveLeft = false;
 
 	this.jump = function(dt){
+		console.log(this.canJump);
 		if(!this.canMoveDown && this.canJump){
 			this.velocityY=-7;
 			this.canJump = false;
@@ -50,6 +53,7 @@ function component(width, height, color, x, y, name,img){
 	}
 	this.update = function(dt){
 		this.velocityX *= this.friction * dt;
+
 		if(this.canMoveLeft){
 			this.velocityX-=this.acceleration*dt;
 		}else if(this.velocityX<0){
