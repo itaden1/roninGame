@@ -37,7 +37,8 @@ function component(width, height, color, x, y, name,img){
 	this.bbd = {col:'blue',x:this.x,y:this.y+(this.height/2),width:this.width, height:this.height/2}
 	this.bbl = {col:'orange',x:this.x-3,y:this.y+10,width:this.width/2-3,height:this.height-20 }
 	this.bbr = {col:'brown',x:this.x+(this.width/2),y:this.y+10,width:this.width/2+3,height:this.height-20}
-
+	
+	this.solid = true;
 	//booleans to check before moving the character
 	this.canMoveUp = false;
 	this.canMoveDown = false;

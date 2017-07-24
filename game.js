@@ -42,27 +42,38 @@ function game(){
 		//initialise components
 		this.gameArea.start();
 		this.levelMap.populateMap();
-
+		this.collisionObjects = []
+		for(var i=0;i<this.levelMap.collisionObjects.length;i++){
+			this.collisionObjects.push(this.levelMap.collisionObjects[i]);
+		}
 		//find start of level
 		var x = 128;
 		var y = 0;
 		for(var i = 0; i < this.levelMap.map.length; i++){
-			if(this.levelMap.map[i][0].solid){
-				y = this.levelMap.map[i][0].y-128;
+			if(this.levelMap.map[i][x/64].solid){
+				y = this.levelMap.map[i][x/64].y-128;
 				break;
 			}
 		}
 		this.player = new component(64,128,"red",x,y,'player',this.playerImg);
 		//create the enemy
 		this.enemies = []
-		for(var i=0;i<15;i++){
-			var random = Math.floor((Math.random()*this.levelMap.map.length) +1);
-			var start = random * 640;
-			var enemy = new component(64,128,"blue",start,500,'enemy',this.enemyImg);
+		for(var i=0;i<5;i++){
+			var random = Math.floor((Math.random()*this.levelMap.map[0].length));
+			var startx = random * 64;
+			var starty = 0;
+			for(var y=0;y<this.levelMap.map.length; y++){
+				if(this.levelMap.map[y][random].solid){
+					starty = this.levelMap.map[y][random].y-128;
+					break;
+				}
+			}
+			var enemy = new component(64,128,"blue",startx,starty,'enemy',this.enemyImg);
 			//add ai component to the enemy
 			enemy.ai = new ai();
 			enemy.ai.init(this.collisionChecker,this.player);
 			this.enemies.push(enemy);
+			this.collisionObjects.push(enemy);
 		}
 		//initiate delta time
 		this.now = timeStamp();
@@ -90,6 +101,11 @@ function game(){
 	},
 	this.restart = function(){
 		console.log('restarting');
+		this.collisionObjects = []
+		for(var i=0;i<this.levelMap.collisionObjects.length;i++){
+			this.collisionObjects.push(this.levelMap.collisionObjects[i]);
+		}
+		this.enemies = []
 		//find start of level
 		var x = 128;
 		var y = 0;
@@ -109,13 +125,30 @@ function game(){
 		this.camera.y = 0;
 		this.camera.update(this.dt,this.player,this.levelMap.map);
 		
+		for(var i=0;i<5;i++){
+			var random = Math.floor((Math.random()*this.levelMap.map[0].length));
+			var startx = random * 64;
+			var starty = 0;
+			for(var y=0;y<this.levelMap.map.length; y++){
+				if(this.levelMap.map[y][random].solid){
+					starty = this.levelMap.map[y][random].y-128;
+					break;
+				}
+			}
+			var enemy = new component(64,128,"blue",startx,starty,'enemy',this.enemyImg);
+			//add ai component to the enemy
+			enemy.ai = new ai();
+			enemy.ai.init(this.collisionChecker,this.player);
+			this.enemies.push(enemy);
+			this.collisionObjects.push(enemy);
+		}
 		var self = this;
 		window.requestAnimationFrame(function(){
 			self.gameLoop();
 		});
 	},
 	this.gameLoop = function(){
-		
+		var dead = false;
 		this.fpsMeter.tickStart();
 		
 		//update delta time
@@ -129,16 +162,27 @@ function game(){
 		this.checkKeys();
 
 		//do collision checking
-		for(var i = 0;i<this.levelMap.collisionObjects.length;i++){
-			this.collisionChecker.checkMovement(this.player,this.levelMap.collisionObjects)
+		for(var i = 0;i<this.collisionObjects.length;i++){
+			this.collisionChecker.checkMovement(this.player,this.collisionObjects)
+		}
+		for(var i = 0;i<this.enemies.length;i++){
+			if(this.collisionChecker.check(this.player,this.enemies[i])){
+				dead = true;
+				console.log('death');
+				
+			}	
 		}
 
 		//enemy actions
 		for(var i=0;i<this.enemies.length;i++){
-			this.enemies[i].update(this.dt);
-			this.enemies[i].ai.aiDo(this.enemies[i],this.levelMap.collisionObjects);
-			this.collisionChecker.checkMovement(this.enemies[i],this.levelMap.collisionObjects)
-			renderList.push(this.enemies[i]);
+			var enemy = this.enemies[i];
+			var ind = this.collisionObjects.indexOf(enemy);
+			this.collisionObjects.splice(ind, 1);
+			enemy.update(this.dt);
+			enemy.ai.aiDo(enemy,this.collisionObjects);
+			this.collisionChecker.checkMovement(enemy,this.collisionObjects)
+			this.collisionObjects.push(enemy);
+			renderList.push(enemy);
 		}
 		//update the player, and camera position
 		this.player.update(this.dt);
@@ -155,9 +199,13 @@ function game(){
 		
 		//if the player is dead restart game
 		if(this.player.y>this.levelMap.map.length*64){
+			dead = true;
 			console.log('death');
+		}
+		if(dead){
 			this.restart();
-		}else{
+		}
+		else{
 		//start the next loop
 			var self = this;
 			window.requestAnimationFrame(function(){
