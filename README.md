@@ -5,3 +5,5 @@ A html 5 canvas pltformer.
 * update sprites with animations
 * update AI
 * win case
+
+![GitHub Logo](/img/roninscreenshot.jpg)
