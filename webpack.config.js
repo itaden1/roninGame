@@ -7,7 +7,8 @@ module.exports = {
 	devtool: debug ? "inline-sourcemap" : null,
 	entry: "./main.js",
 	output: {
-		path: __dirname + "/dist",
+		path:'/',
+		//path: __dirname + "/dist",
 		filename: "game.js"
 	},
 	module:{
