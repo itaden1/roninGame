@@ -3,6 +3,7 @@ function ai(){
 	this.init = function(col,target){
 		this.collisionChecker = col;
 		this.target = target;
+		this.attackDistance = 700;
 	},
 	this.aiDo = function(obj,colObj){
 		var object = obj;
@@ -12,7 +13,7 @@ function ai(){
 		object.canJump=true;
 		var attackRange = false;
 
-		if(this.target.x<obj.x-object.width){
+		if(this.target.x < obj.x - object.width && obj.x - this.target.x < this.attackDistance){
 			object.velocityX -= object.acceleration;
 			//aoe to check holes
 			var aoe1 = {x:object.x-object.width/2,y:object.y+object.height,width:object.width/2,height:object.width/2};
@@ -27,7 +28,7 @@ function ai(){
 				}
 			}
 		}
-		else if(this.target.x>obj.x+object.width*2){
+		else if(this.target.x > obj.x + object.width * 2 && object.x - this.target.x > 0 - this.attackDistance){
 			object.velocityX += object.acceleration;
 			//aoe check for holes
 			var aoe1 = {x:object.x+object.width/2,y:object.y+object.height,width:object.width/2,height:object.width/2};

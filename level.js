@@ -1,4 +1,8 @@
-
+function spawner(x, y, name){
+	this.x = x;
+	this.y = y;
+	this.name = name;
+}
 function tile(x,y,w,h,solid,platform,img,sx,sy){
 
 	//position and size
@@ -29,6 +33,7 @@ function level(level,img){
 	this.tileH = 64;
 
 	this.collisionObjects = [];
+	this.spawners = [];
 	this.image = img;
 	this.map = mapGrids[level];
 
@@ -88,8 +93,21 @@ function level(level,img){
 					var t = new tile(x*this.tileW,y*this.tileH,this.tileW,this.tileH,false,true,image,this.tileW*3,this.tileH);
 					this.map[y][x]=t;
 					this.collisionObjects.push(t);
-
-				}else{
+				}
+				else if (this.map[y][x] === 'e'){
+					var e = new spawner(x * this.tileW, y * this.tileH, 'spawn');
+					this.map[y][x] = e;
+					this.spawners.push(e);
+				}
+				else if (this.map[y][x] === 's'){
+					var s = new spawner(x * this.tileW, y * this.tileH, 'start');
+					this.map[y][x] = this.spawners.push(s);
+				}
+				else if (this.map[y][x] === 'f'){
+					var f = new spawner(x * this.tileW, y * this.tileH, 'finish');
+					this.map[y][x] = this.spawners.push(f);
+				}
+				else{
 					var t = new tile(x*this.tileW,y*this.tileH,this.tileW,this.tileH,false);
 					this.map[y][x]=t;
 				}
@@ -98,8 +116,10 @@ function level(level,img){
 	}
 }
 
+var e = 'e'; // represent enemy
+var s = 's'; //level start
+var f = 'f'; //level finish
 var mapGrids = {
-
 	//arrays representing the level layout
 	1:[
 		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -114,7 +134,7 @@ var mapGrids = {
 		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,3,0,0,0,1,2,2],
-		[2,2,2,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,2,2,2,3,0,0,0,4,6,0,0,0,4,5,5],
+		[2,2,2,3,0,0,0,0,s,f,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,2,2,2,3,0,0,0,4,6,0,0,0,4,5,5],
 		[5,5,5,6,0,0,0,0,1,3,0,0,1,2,2,2,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,2,3,0,0,0,1,5,5,5,5,5,6,0,0,0,4,6,0,0,0,4,5,5],
 		[5,5,5,6,0,0,0,0,4,6,0,0,4,5,5,5,5,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,5,5,5,6,0,0,0,4,5,5,5,5,5,6,0,0,0,4,6,0,0,0,4,5,5],
 		[5,5,5,6,0,0,0,0,4,6,0,0,4,5,5,5,5,5,2,2,2,3,0,0,0,0,1,2,2,3,0,0,1,5,5,5,5,6,0,0,0,4,5,5,5,5,5,6,0,0,0,4,6,0,0,0,4,5,5]
