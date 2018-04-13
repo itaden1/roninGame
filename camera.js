@@ -12,14 +12,19 @@ function camera(x, y, c, canvas){
 	
 	//Update the cameras position
 	this.update = function(dt, focus, map){
-		var map = map;
 
 		//focus the camera on the player
 		if(focus.x > 4 * 64 && focus.x < map[0].length * 64 - this.width + 4 * 64){
 			this.x = focus.x - 4 * 64;
+		}else{
+			this.x = 0;
 		}
-		if(focus.y < map.length * 64 - this.height / 2){
+
+		if(focus.y < map.length * 64 - this.height / 2 && this.y + this.height < map.length * 64){
 			this.y = focus.y - this.height / 2;
+		}else{
+			console.log('bottom');
+			this.y = map.length * 64 - this.height;
 		}
 	}
 
@@ -32,7 +37,7 @@ function camera(x, y, c, canvas){
 
 
 		for(var i = 0; i < arr.length; i++){
-			var item=arr[i];
+			var item = arr[i];
 			
 			//Check if the object is in view
 			if(this.collisionChecker.check(this, item)){

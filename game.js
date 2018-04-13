@@ -35,8 +35,9 @@ function game(){
 		this.background.src = 'img/mountain.jpg';
 		this.playerImg.src = 'img/watercolor.png';
 		this.enemyImg.src = 'img/samurai.png';
-
-		this.levelMap = new level(1, this.tiles);
+		
+		this.levelNum = 1;
+		this.levelMap = new level(this.levelNum, this.tiles);
 
 		//initialise components
 		this.gameArea.start();
@@ -54,15 +55,12 @@ function game(){
 				this.spawners.push(this.levelMap.spawners[s]);
 			}
 			if (this.levelMap.spawners[s].name === 'start'){
-				console.log('found start');
 				this.levelStart = this.levelMap.spawners[s];
 			}
 			if (this.levelMap.spawners[s].name === 'finish'){
-				console.log('found finish');
 				this.levelFinish = this.levelMap.spawners[s];
 			}
 		}
-		console.log(this.levelFinish);
 		
 		// spawn the player character
 		var y = this.levelStart.y - 64;
@@ -79,7 +77,7 @@ function game(){
 		var camX = this.player.x - 4 * 64;
 		var camY = this.player.y - 720 / 2;
 		this.camera = new camera(camX, camY, this.collisionChecker, this.gameArea);
-		//this.camera.update(0,this.player,this.levelMap.map);
+		this.camera.update(1,this.player,this.levelMap.map);
 		
 		//start the game loop
 		requestAnimationFrame(this.gameLoop.bind(this));	
@@ -118,10 +116,27 @@ function game(){
 	},
 
 	this.restart = function(){
-		console.log('restarting');
-		this.collisionObjects = []
+
+		this.levelMap = new level(1, this.tiles);
+		this.levelMap.populateMap();
+		this.collisionObjects = [];
+		this.spawners = [];
+
 		for(var i = 0; i < this.levelMap.collisionObjects.length; i++){
 			this.collisionObjects.push(this.levelMap.collisionObjects[i]);
+		}
+		for(var s = 0;s < this.levelMap.spawners.length; s++){
+			if (this.levelMap.spawners[s].name === 'spawn'){
+				this.spawners.push(this.levelMap.spawners[s]);
+			}
+			if (this.levelMap.spawners[s].name === 'start'){
+				console.log('found start');
+				this.levelStart = this.levelMap.spawners[s];
+			}
+			if (this.levelMap.spawners[s].name === 'finish'){
+				console.log('found finish');
+				this.levelFinish = this.levelMap.spawners[s];
+			}
 		}
 		
 		var y = this.levelStart.y - 64;
@@ -167,6 +182,7 @@ function game(){
 		
 		if (this.collisionChecker.check(this.player, this.levelFinish)){
 			console.log('you win!');
+
 		}
 		
 		for(var i = 0; i < this.enemies.length; i++){
@@ -193,6 +209,7 @@ function game(){
 			this.collisionObjects.push(enemy);
 			renderList.push(enemy);
 		}
+
 		//update the player, and camera position
 		this.player.update(this.dt);
 		this.camera.update(this.dt, this.player, this.levelMap.map);

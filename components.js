@@ -68,74 +68,77 @@ function component(width, height, color, x, y, name,img){
 	this.canMoveDown = false;
 	this.canMoveRight = false;
 	this.canMoveLeft = false;
+}
+// using prototypes for component functions to avoid replication
+// Jump function
+component.prototype.jump = function(dt){
+	if(!this.canMoveDown && this.canJump){
+		this.velocityY = -7;
+		this.canJump = false;
+	}		
+}
 
-	this.jump = function(dt){
-		if(!this.canMoveDown && this.canJump){
-			this.velocityY = -7;
-			this.canJump = false;
-		}		
+// Update function
+component.prototype.update = function(dt){
+	this.velocityX *= this.friction * dt;
+
+	if(this.canMoveLeft){
+		this.velocityX -= this.acceleration * dt;
+	}else if(this.velocityX < 0){
+		this.velocityX = 0;
 	}
-	this.update = function(dt){
-		this.velocityX *= this.friction * dt;
 
-		if(this.canMoveLeft){
-			this.velocityX -= this.acceleration * dt;
-		}else if(this.velocityX < 0){
-			this.velocityX = 0;
-		}
-
-		if(this.canMoveRight){
-			this.velocityX += this.acceleration * dt;
-		}else if(this.velocityX > 0){
-			this.velocityX = 0;
-		}
-
-		if(this.canMoveDown){
-			this.velocityY += this.gravity * dt;
-
-		}else if(!this.canMoveDown && this.velocityY > 0){
-			this.velocityY = 0;
-		}
-
-		if(!this.canMoveUp && this.velocityY < 0){
-			this.velocityY = 0;
-		}
-		
-		this.x += this.velocityX * dt;
-		this.imgX += this.velocityX * dt;
-		this.y += this.velocityY * dt;
-		this.imgY += this.velocityY * dt;
-		
-		//bounding boxxes used for collision detection
-		this.bbu = {
-			col: 'yellow',
-			x: this.x,
-			y: this.y + this.velocityY * dt,
-			width: this.width,
-			height:this.height / 4
-		};
-		this.bbd = {
-			col: 'blue',
-			x: this.x,
-			y: this.y + (this.height - 2) + this.velocityY * dt,
-			width: this.width,
-			height: 2
-		};
-		this.bbl = {
-			col: 'orange',
-			x: this.x + this.velocityX * dt - 1,
-			y: this.y + 3,
-			width: this.width / 2 - 3,
-			height: this.height - 6
-		};
-		this.bbr = {
-			col: 'brown',
-			x: this.x + (this.width / 2 - 1) + 1 + this.velocityX * dt,
-			y: this.y + 3,
-			width: this.width / 2 + 3,
-			height: this.height - 6
-		};
+	if(this.canMoveRight){
+		this.velocityX += this.acceleration * dt;
+	}else if(this.velocityX > 0){
+		this.velocityX = 0;
 	}
+
+	if(this.canMoveDown){
+		this.velocityY += this.gravity * dt;
+
+	}else if(!this.canMoveDown && this.velocityY > 0){
+		this.velocityY = 0;
+	}
+
+	if(!this.canMoveUp && this.velocityY < 0){
+		this.velocityY = 0;
+	}
+		
+	this.x += this.velocityX * dt;
+	this.imgX += this.velocityX * dt;
+	this.y += this.velocityY * dt;
+	this.imgY += this.velocityY * dt;
+		
+	//bounding boxxes used for collision detection
+	this.bbu = {
+		col: 'yellow',
+		x: this.x,
+		y: this.y + this.velocityY * dt,
+		width: this.width,
+		height:this.height / 4
+	};
+	this.bbd = {
+		col: 'blue',
+		x: this.x,
+		y: this.y + (this.height - 2) + this.velocityY * dt,
+		width: this.width,
+		height: 2
+	};
+	this.bbl = {
+		col: 'orange',
+		x: this.x + this.velocityX * dt - 1,
+		y: this.y + 3,
+		width: this.width / 2 - 3,
+		height: this.height - 6
+	};
+	this.bbr = {
+		col: 'brown',
+		x: this.x + (this.width / 2 - 1) + 1 + this.velocityX * dt,
+		y: this.y + 3,
+		width: this.width / 2 + 3,
+		height: this.height - 6
+	};
 }
 
 module.exports = component;
