@@ -12,32 +12,15 @@ function camera(x, y, c, canvas){
 	
 	//Update the cameras position
 	this.update = function(dt, focus, map){
-		console.log(map.length);	
-		if(this.x > 0 && this.x < map[0].length * 64 - this.width){
-			this.x = focus.x - 4 * 64;
-		}else{
-			this.x = this.x;
-		}
-		if(this.y < map.length * 64 - this.height && this.y > 0){
-			this.y = focus.y - this.height / 2;
-		}else{
-			this.y = this.y;
-		}
 		//focus the camera on the player
-		/*
-		if(focus.x > 4 * 64 && focus.x < map[0].length * 64 - this.width + 4 * 64){
+		if(focus.x > 4 * 64 && focus.x < map[0].length * 64 - this.width + 6 * 64){
 			this.x = focus.x - 4 * 64;
-		}else{
-			this.x = 0;
 		}
+		
 
-		if(focus.y < map.length * 64 - this.height / 2 && this.y + this.height < map.length * 64){
+		if(this.y + this.height < map.length * 64){
 			this.y = focus.y - this.height / 2;
-		}else{
-			console.log('bottom');
-			this.y = map.length * 64 - this.height;
 		}
-		*/
 	}
 
 	//Render the game with list of objects to render

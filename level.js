@@ -38,13 +38,14 @@ function level(level,img){
 	this.spawners = [];
 	this.image = img;
 	this.mapGrid = mapGrids[level];
-	this.map = Array(this.mapGrid[0].length).fill([Array(this.mapGrid.length).fill(0)]);
+	this.map = Array(this.mapGrid.length).fill(Array(this.mapGrid[0].length).fill(0));
 
 	//iterate through the array map and generate tiles
 	this.populateMap = function(){
 		var image = this.image;
-		for(var x = 0; x < this.mapGrid[0].length; x++){
-			for(var y = 0; y < this.mapGrid.length; y++){
+		console.log('width = ' + this.map[0].length + ', height = ' + this.map.length);
+		for(var y = 0; y < this.mapGrid.length; y++){
+			for(var x = 0; x < this.mapGrid[y].length; x++){
 				if(this.mapGrid[y][x] === 1){
 					//top left
 					var t = new tile(x * this.tileW, y * this.tileH, this.tileW, this.tileH, true, false, image, 0, 0);

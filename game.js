@@ -74,8 +74,8 @@ function game(){
 		this.last = timeStamp();
 		
 		//make the camera
-		var camX = this.player.x - 4 * 64;
-		var camY = this.player.y - 720 / 2;
+		var camX = 0;
+		var camY = 0;
 		this.camera = new camera(camX, camY, this.collisionChecker, this.gameArea);
 		this.camera.update(1,this.player,this.levelMap.map);
 		
@@ -117,7 +117,7 @@ function game(){
 
 	this.restart = function(){
 
-		this.levelMap = new level(1, this.tiles);
+		this.levelMap = new level(this.levelNum, this.tiles);
 		this.levelMap.populateMap();
 		this.collisionObjects = [];
 		this.spawners = [];
@@ -149,8 +149,8 @@ function game(){
 		this.player.y = y;
 		this.player.imgX = x;
 		this.player.imgY = y;
-		var camX = this.player.x - 4 * 64;
-		var camY = this.player.y - 720 / 2;
+		var camX = 0;
+		var camY = 0;
 		this.camera = new camera(camX, camY, this.collisionChecker, this.gameArea);
 		
 		this.enemies = []
@@ -163,6 +163,7 @@ function game(){
 	},
 	this.gameLoop = function(){
 		var dead = false;
+		var win = false;
 		this.fpsMeter.tickStart();
 		
 		//update delta time
@@ -182,6 +183,11 @@ function game(){
 		
 		if (this.collisionChecker.check(this.player, this.levelFinish)){
 			console.log('you win!');
+			win = true;
+			this.levelNum ++;
+			if (this.levelNum > 3){
+				this.levelNum = 1;
+			}
 
 		}
 		
@@ -228,7 +234,7 @@ function game(){
 			dead = true;
 			console.log('death');
 		}
-		if(dead){
+		if(dead || win){
 			this.restart();
 		}
 		else{
