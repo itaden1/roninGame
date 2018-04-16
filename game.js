@@ -36,7 +36,7 @@ function game(){
 		this.playerImg.src = 'img/watercolor.png';
 		this.enemyImg.src = 'img/samurai.png';
 		
-		this.levelNum = 1;
+		this.levelNum = 2;
 		this.levelMap = new level(this.levelNum, this.tiles);
 
 		//initialise components

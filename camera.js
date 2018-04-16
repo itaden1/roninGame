@@ -13,7 +13,7 @@ function camera(x, y, c, canvas){
 	//Update the cameras position
 	this.update = function(dt, focus, map){
 		//focus the camera on the player
-		if(focus.x > 4 * 64 && focus.x < map[0].length * 64 - this.width + 6 * 64){
+		if(focus.x > 4 * 64 && focus.x < map[0].length * 64 - this.width + 4 * 64){
 			this.x = focus.x - 4 * 64;
 		}
 		

@@ -41,7 +41,7 @@ function collisionChecker(){
 				//this.y=objectChecking.y-this.height+1;
 				//this.imgY=objectChecking.y-this.height+1;
 				break;
-			}else if(this.check(ob1.bbd, objectChecking) && objectChecking.platform && ob1.bbd.y - ob1.velocityY * dt < objectChecking.y){
+			}else if(this.check(ob1.bbd, objectChecking) && objectChecking.platform && ob1.bbd.y - ob1.velocityY < objectChecking.y){
 				ob1.canMoveDown = false;
 				break;
 			}else{

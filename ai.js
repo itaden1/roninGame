@@ -40,7 +40,7 @@ function ai(){
 				}
 			}
 		}
-		else if(this.target.x > obj.x + object.width * 2 && object.x - this.target.x > 0 - this.attackDistance){
+		else if(this.target.x > obj.x && object.x - this.target.x > 0 - this.attackDistance){
 			object.velocityX += object.acceleration;
 			//aoe check for holes
 			var aoe1 = {
