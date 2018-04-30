@@ -145,37 +145,37 @@ function level(level,img){
 				}
 				else if(this.mapGrid[y][x] === 'o'){
 					//back double mid left
-					var t = new tile(x * this.tileW, y * this.tileH, this.tileW, this.tileH, false, false, image, this.tileW * 5, this.tileH * 2);
+					var t = new tile(x * this.tileW, y * this.tileH, this.tileW, this.tileH, false, false, image, this.tileW * 4, this.tileH * 4);
 					this.map[y][x] = t;
 					this.collisionObjects.push(t);
 				}
 				else if(this.mapGrid[y][x] === 'p'){
 					//back double mid right
-					var t = new tile(x * this.tileW, y * this.tileH, this.tileW, this.tileH, false, false, image, this.tileW * 6, this.tileH * 2);
+					var t = new tile(x * this.tileW, y * this.tileH, this.tileW, this.tileH, false, false, image, this.tileW * 5, this.tileH * 4);
 					this.map[y][x] = t;
 					this.collisionObjects.push(t);
 				}
 				else if(this.mapGrid[y][x] === 'a'){
 					//back diagonal top left
-					var t = new tile(x * this.tileW, y * this.tileH, this.tileW, this.tileH, false, false, image, this.tileW * 6, 0);
+					var t = new tile(x * this.tileW, y * this.tileH, this.tileW, this.tileH, false, false, image, this.tileW * 3, this.tileH * 3);
 					this.map[y][x] = t;
 					this.collisionObjects.push(t);
 				}
 				else if(this.mapGrid[y][x] === 'd'){
 					//back double diagonal top right
-					var t = new tile(x * this.tileW, y * this.tileH, this.tileW, this.tileH, false, false, image, this.tileW * 7, 0);
+					var t = new tile(x * this.tileW, y * this.tileH, this.tileW, this.tileH, false, false, image, this.tileW * 5, this.tileH * 3);
 					this.map[y][x] = t;
 					this.collisionObjects.push(t);
 				}
 				else if(this.mapGrid[y][x] === 'g'){
 					//back diagonal bottom left
-					var t = new tile(x * this.tileW, y * this.tileH, this.tileW, this.tileH, false, false, image, this.tileW * 6, this.tileH);
+					var t = new tile(x * this.tileW, y * this.tileH, this.tileW, this.tileH, false, false, image, this.tileW * 3, this.tileH * 4);
 					this.map[y][x] = t;
 					this.collisionObjects.push(t);
 				}
 				else if(this.mapGrid[y][x] === 'h'){
 					//back diagonal bottom left
-					var t = new tile(x * this.tileW, y * this.tileH, this.tileW, this.tileH, false, false, image, this.tileW * 7, this.tileH);
+					var t = new tile(x * this.tileW, y * this.tileH, this.tileW, this.tileH, false, false, image, this.tileW * 4, this.tileH * 4);
 					this.map[y][x] = t;
 					this.collisionObjects.push(t);
 				}
@@ -250,15 +250,15 @@ var mapGrids = {
 		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,0,0,0,0,0,0,0,0,0,0,t,y,u,0,0,0,t,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,0,0,0,t,2,3,0,0,0,0,0,i,0,0,0,0,0,0,0,0,0,1,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,0,0,0,0,7,8,u,0,0,0,a,p,0,0,0,0,0,0,0,0,0,4,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,0,0,0,0,0,0,0,0,0,0,t,y,y,u,0,0,0,0,0,0,0,4,5,3,0,0,0,0,0,t,y,u,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,f],
-		[0,s,0,0,0,0,0,0,0,0,0,0,0,0,o,p,0,0,0,0,1,2,u,0,4,5,6,0,0,0,0,0,0,y,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,3,5,5,5,1,2,2],
-		[2,2,3,0,0,0,0,0,0,0,0,0,0,0,g,p,0,0,0,1,2,5,0,0,4,6,6,0,0,0,0,0,y,i,0,0,0,0,0,0,0,1,2,2,2,2,2,3,5,5,5,4,6,0,0,0,4,5,5],
-		[5,5,6,0,0,0,0,0,0,0,0,0,t,2,2,3,0,0,1,5,8,5,0,0,4,5,6,0,0,0,0,1,2,2,u,0,0,1,0,0,5,4,5,5,5,5,5,6,0,0,0,4,6,0,0,0,4,5,5],
-		[5,5,5,2,2,2,2,u,0,0,0,0,0,5,5,5,u,0,4,5,5,8,0,0,4,5,5,6,0,0,0,4,5,5,0,0,0,4,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5],
-		[5,5,5,5,5,5,6,0,0,0,0,0,0,4,5,8,0,0,7,8,8,8,0,0,4,8,8,6,0,0,0,4,8,5,0,0,0,7,5,5,5,4,5,5,5,5,5,6,0,0,0,4,6,0,0,0,4,5,5]
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,t,y,u,0,0,0,t,y,u,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,t,2,3,0,0,0,0,0,i,0,0,0,0,0,i,0,0,0,1,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,7,8,u,0,0,0,a,o,d,0,0,0,a,p,0,0,0,4,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,a,o,p,0,0,0,0,t,w,w,u,0,a,o,o,d,0,0,4,5,3,0,0,0,0,0,t,y,u,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,f],
+		[0,s,0,0,0,0,g,p,0,0,0,0,0,0,g,o,d,a,o,o,1,2,u,0,4,5,6,0,0,0,0,0,0,y,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,3,5,5,5,1,2,2],
+		[2,2,3,0,0,0,g,p,0,0,0,0,0,a,o,o,o,o,o,1,2,5,0,0,4,6,6,0,0,0,0,0,y,i,0,0,0,0,0,0,0,1,2,2,2,2,2,3,5,5,5,4,6,0,0,0,4,5,5],
+		[5,5,6,0,0,a,o,p,0,0,0,0,t,2,2,3,o,o,1,5,8,5,0,0,4,5,6,0,0,0,0,1,2,2,u,0,0,1,0,0,5,4,5,5,5,5,5,6,0,0,0,4,6,0,0,0,4,5,5],
+		[5,5,5,2,2,2,2,u,0,0,0,0,0,5,5,5,o,o,4,5,5,8,0,0,4,5,5,6,0,0,0,4,5,5,0,0,0,4,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5],
+		[5,5,5,5,5,5,6,0,0,0,0,0,0,4,5,8,o,o,7,8,8,8,0,0,4,8,8,6,0,0,0,4,8,5,0,0,0,7,5,5,5,4,5,5,5,5,5,6,0,0,0,4,6,0,0,0,4,5,5]
 	],
 	3:[	
 		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
