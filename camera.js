@@ -47,13 +47,19 @@ function camera(x, y, c, canvas){
 				var dh = item.imgHeight;
 
 				//draw to the canvas
-				ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
+				if(item.img){
+					ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
+				}
+				else{
+					ctx.fillStyle = item.col;
+					ctx.fillRect(item.x - this.x, item.y - this.y,item.width, item.height);
+				}
 
 				//uncomment the belowto see bounding boxes
 				//ctx.fillStyle = item.col;
 				//ctx.fillRect(item.x-this.x, item.y-this.y, item.width, item.height);
-				// if(item.img){ctx.drawImage(img,sx,sy,sw,sh,dx,dy,dw,dh);}
-				// else{console.log('no img');}
+				//if(item.img){ctx.drawImage(img,sx,sy,sw,sh,dx,dy,dw,dh);}
+				//else{console.log('no img');}
 			}
 		}
 	}

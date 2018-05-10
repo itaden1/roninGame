@@ -107,7 +107,12 @@ function game(){
 		if(this.controller.keyDown.A){
 			this.player.velocityX -= this.player.acceleration;
 			}
-
+		if(this.controller.keyDown.ENTER){
+			this.player.attack(this.dt);
+		}
+		else if(this.player.attackDuration === 40){
+			this.player.canAttack = true;
+		}
 		if(this.controller.keyDown.SPACE){
 			this.player.jump(this.dt);
 		}else{
@@ -218,6 +223,11 @@ function game(){
 
 		//update the player, and camera position
 		this.player.update(this.dt);
+
+		//for rendering player attack box
+		if(this.player.attacking){
+			renderList.push(this.player.ab)
+		}
 		this.camera.update(this.dt, this.player, this.levelMap.map);
 
 		for(var i = 0; i < this.levelMap.collisionObjects.length; i++){

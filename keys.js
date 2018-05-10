@@ -20,6 +20,7 @@ function keyInputController(){
 		//translation dictionary
 		var KEY = {
 			32: 'SPACE',
+			13: 'ENTER',
 			87: 'W',
 			68: 'D',
 			65: 'A',

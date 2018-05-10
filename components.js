@@ -32,6 +32,11 @@ function component(width, height, color, x, y, name,img){
 	this.friction = 0.8;
 	this.acceleration = 1.5;
 
+	this.attackSpeed = 40;
+	this.attackDuration = 0;
+	this.attacking = false;
+	this.canAttack = true;
+
 	//bounding boxes for collision detection, color value is for testing purposes
 	this.bbu = {
 		col: 'yellow',
@@ -61,6 +66,15 @@ function component(width, height, color, x, y, name,img){
 		width: this.width / 2 + 3,
 		height: this.height - 20
 	};
+
+	//bounding box for attacks
+	this.ab = {
+		col: 'red',
+		x: this.x + this.width,
+		y: this.y,
+		width: this.width,
+		height: this.height,
+	};
 	
 	this.solid = true;
 	//booleans to check before moving the character
@@ -77,10 +91,33 @@ component.prototype.jump = function(dt){
 		this.canJump = false;
 	}		
 }
+//attack function
+component.prototype.attack = function(dt){
+	if (this.canAttack){
+		console.log('attack!!!');
+		this.canAttack = false;
+		this.attacking = true;
+	}
+}
 
 // Update function
 component.prototype.update = function(dt){
+	
 	this.velocityX *= this.friction * dt;
+	
+	//time the attacks
+	if (this.attacking){
+		this.attackDuration--;
+		if(this.attackDuration <= 20){
+			this.attacking = false;
+		}
+	}
+	else if (this.canAttack === false){
+		this.attackDuration--;
+		if(this.attackDuration <= 0){
+			this.attackDuration = 40;
+		}
+	}
 
 	if(this.canMoveLeft){
 		this.velocityX -= this.acceleration * dt;
@@ -138,6 +175,14 @@ component.prototype.update = function(dt){
 		y: this.y + 3,
 		width: this.width / 2 + 3,
 		height: this.height - 6
+	};
+	//bounding box for attacks
+	this.ab = {
+		col: 'red',
+		x: this.x + this.width,
+		y: this.y,
+		width: this.width,
+		height: this.height,
 	};
 }
 
